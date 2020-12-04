@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {ABI} from './ABI';
-import logo from './logo.svg';
 import './App.css';
 import Web3 from "web3";
 
@@ -13,19 +12,38 @@ const RemixContract = new web3.eth.Contract(
 );
 
 
-console.log(RemixContract);
-
 class App extends Component {
+
+  state = {
+    name: '',
+    roll_number: null,
+    show_voters_list:false
+  }
+
+  handleChange = (evt) => {
+    this.setState({
+    [evt.target.name]: evt.target.value
+    })
+  }
+
+  getCandidates = (evt) =>{
+
+  }
+
   render() {
+    const style = {
+      backgroundColor: 'white',
+      font: 'inherit',
+      border: '1px solid blue',
+      padding: '8px',
+      cursor: 'pointer'
+    };
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <h1>Welcome to Election Portal. Enter the details below</h1>
+        <input name="roll_number" type="number" placeholder="Enter your Roll Number" onChange={this.handleChange}/>
+        <input name="name" type="text" placeholder="Enter your name" onChange={this.handleChange}/>
+        <button style={style} onClick={this.getCandidates}>Submit</button>
       </div>
     );
   }
