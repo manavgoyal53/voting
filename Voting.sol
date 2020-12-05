@@ -38,10 +38,9 @@ contract VotingBallot {
 
     // Computes the winning proposal taking all
     /// previous votes into account.
-    function winningCandidate(string branch) public view returns (uint)
+    function winningCandidate(string branch) public view returns (uint winningCandidate)
     {
         uint winningVoteCount = 0;
-        winningCandidate;
         Candidate[] list = candidates_info[branch];
         uint length = list.length;
         for (uint p = 0; p <length; p++) {
@@ -53,14 +52,14 @@ contract VotingBallot {
         return winningCandidate;
     }
     
-    function getCandidates(string branch) public returns(uint []){
-        uint[] result;
-        for (uint i=0;i<candidates.length;i++){
-            if (keccak256(abi.encodePacked(candidates[i].branch))== keccak256(abi.encodePacked(branch))) {
-                result.push(candidates[i].roll_number);
-            }
-        }
-        return result;
-    }
+    // function getCandidates(string branch) public returns(uint []){
+    //     uint[] result;
+    //     for (uint i=0;i<candidates.length;i++){
+    //         if (keccak256(abi.encodePacked(candidates[i].branch))== keccak256(abi.encodePacked(branch))) {
+    //             result.push(candidates[i].roll_number);
+    //         }
+    //     }
+    //     return result;
+    // }
     
 }
