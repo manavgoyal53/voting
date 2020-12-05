@@ -2,69 +2,55 @@ pragma solidity ^0.4.0;
 pragma experimental ABIEncoderV2;
 /// @title Voting with delegation.
 contract VotingBallot {
- 
-    struct Voter {
-        uint roll_number; //roll number of the voter
-        bool voted;  // if true, that person already voted
-    }
     
     struct Candidate {
-        uint voteCount; 
         uint roll_number;
         string branch;
+        string name;
     }
 
-    mapping(address => Voter) public voters;
-    
-    Candidate[] public candidates;
+    mapping(address => bool) public voters_addresses;
+    mapping(uint => bool) public voters_roll_nums;
+    mapping(uint=>uint) vote_count;
+    mapping(string=>Candidate[]) candidates_info;
 
-    constructor(Candidate[] memory candiateRollNums) {
+    constructor(Candidate[] memory candiatesInfo) {
 
-        for (uint i = 0; i < candiateRollNums.length; i++) {
-            candidates.push(Candidate({
-                roll_number: candiateRollNums[i].roll_number,
-                voteCount: 0,
-                branch: candiateRollNums[i].branch
-            }));
+        for (uint i = 0; i < candiatesInfo.length; i++) {
+            candidates_info[candiatesInfo[i].branch].push(candiatesInfo[i]);
         }
     }
     
-    function vote(uint candidate) public {
-        Voter storage sender = voters[msg.sender];
+    function vote(uint candidate, uint voter_roll) public {
         
-        require(!sender.voted, "Already voted.");
-        sender.voted = true;
+        require(!voters_roll_nums[voter_roll],"You have already voted");
+        require(!voters_addresses[msg.sender], "This address has already been used for voting.");
+
         
+        voters_addresses[msg.sender] = true;
+        voters_roll_nums[voter_roll] = true;
 
         // If `proposal` is out of the range of the array,
         // this will throw automatically and revert all
         // changes.
-        candidates[candidate].voteCount += 1;
+        vote_count[candidate] += 1;
     }
 
-    /// @dev Computes the winning proposal taking all
+    // Computes the winning proposal taking all
     /// previous votes into account.
-    function winningCandidate() public view
-            returns (uint)
+    function winningCandidate(string branch) public view returns (uint)
     {
-         uint winningVoteCount = 0;
-         uint winningCandidate;
-        for (uint p = 0; p < candidates.length; p++) {
-            if (candidates[p].voteCount > winningVoteCount) {
-                winningVoteCount = candidates[p].voteCount;
+        uint winningVoteCount = 0;
+        winningCandidate;
+        Candidate[] list = candidates_info[branch];
+        uint length = list.length;
+        for (uint p = 0; p <length; p++) {
+            if (vote_count[list[p].roll_number] > winningVoteCount) {
+                winningVoteCount = vote_count[list[p].roll_number];
                 winningCandidate = p;
             }
         }
         return winningCandidate;
-    }
-
-    // Calls winningProposal() function to get the index
-    // of the winner contained in the proposals array and then
-    // returns the name of the winner
-    function winnerName() public view
-            returns (uint roll_number)
-    {
-        roll_number = candidates[winningCandidate()].roll_number;
     }
     
     function getCandidates(string branch) public returns(uint []){

@@ -2,14 +2,13 @@ import React from 'react';
 
 import './Voter.css';
 
-const person = ( props ) => {
+const voter = ( props ) => {
     return (
         <div className="Voter">
-            <p onClick={props.click}>I'm {props.name} and I am {props.age} years old!</p>
-            <p>{props.children}</p>
-            <input type="text" onChange={props.changed} value={props.name} />
+            <p>Hello! Please vote for {props.roll}</p>
+            <button onClick={props.click}></button>
         </div>
     )
 };
 
-export default person;
+export default voter;
