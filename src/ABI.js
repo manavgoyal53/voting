@@ -1,9 +1,84 @@
-export const ABI = [
+[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "branch",
+				"type": "string"
+			}
+		],
+		"name": "getCandidates",
+		"outputs": [
+			{
+				"components": [
+					{
+						"name": "roll_number",
+						"type": "uint256"
+					},
+					{
+						"name": "branch",
+						"type": "string"
+					},
+					{
+						"name": "name",
+						"type": "string"
+					}
+				],
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "branch",
+				"type": "string"
+			}
+		],
+		"name": "winningCandidate",
+		"outputs": [
+			{
+				"name": "winningCandidate",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "voters_addresses",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
 	{
 		"constant": false,
 		"inputs": [
 			{
 				"name": "candidate",
+				"type": "uint256"
+			},
+			{
+				"name": "voter_roll",
 				"type": "uint256"
 			}
 		],
@@ -21,89 +96,11 @@ export const ABI = [
 				"type": "uint256"
 			}
 		],
-		"name": "candidates",
-		"outputs": [
-			{
-				"name": "voteCount",
-				"type": "uint256"
-			},
-			{
-				"name": "roll_number",
-				"type": "uint256"
-			},
-			{
-				"name": "branch",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "branch",
-				"type": "string"
-			}
-		],
-		"name": "getCandidates",
+		"name": "voters_roll_nums",
 		"outputs": [
 			{
 				"name": "",
-				"type": "uint256[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "voters",
-		"outputs": [
-			{
-				"name": "roll_number",
-				"type": "uint256"
-			},
-			{
-				"name": "voted",
 				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "winningCandidate",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "winnerName",
-		"outputs": [
-			{
-				"name": "roll_number",
-				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -115,19 +112,19 @@ export const ABI = [
 			{
 				"components": [
 					{
-						"name": "voteCount",
-						"type": "uint256"
-					},
-					{
 						"name": "roll_number",
 						"type": "uint256"
 					},
 					{
 						"name": "branch",
 						"type": "string"
+					},
+					{
+						"name": "name",
+						"type": "string"
 					}
 				],
-				"name": "candiateRollNums",
+				"name": "candiatesInfo",
 				"type": "tuple[]"
 			}
 		],
