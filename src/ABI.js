@@ -1,6 +1,6 @@
 [
 	{
-		"constant": false,
+		"constant": true,
 		"inputs": [
 			{
 				"name": "branch",
@@ -29,7 +29,7 @@
 			}
 		],
 		"payable": false,
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -43,8 +43,22 @@
 		"name": "winningCandidate",
 		"outputs": [
 			{
-				"name": "winningCandidate",
-				"type": "uint256"
+				"components": [
+					{
+						"name": "roll_number",
+						"type": "uint256"
+					},
+					{
+						"name": "branch",
+						"type": "string"
+					},
+					{
+						"name": "name",
+						"type": "string"
+					}
+				],
+				"name": "",
+				"type": "tuple"
 			}
 		],
 		"payable": false,
