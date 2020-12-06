@@ -1,6 +1,5 @@
 pragma solidity ^0.4.0;
 pragma experimental ABIEncoderV2;
-/// @title Voting with delegation.
 contract VotingBallot {
     
     struct Candidate {
@@ -30,17 +29,13 @@ contract VotingBallot {
         voters_addresses[msg.sender] = true;
         voters_roll_nums[voter_roll] = true;
 
-        // If `proposal` is out of the range of the array,
-        // this will throw automatically and revert all
-        // changes.
         vote_count[candidate] += 1;
     }
 
-    // Computes the winning proposal taking all
-    /// previous votes into account.
-    function winningCandidate(string branch) public view returns (uint winningCandidate)
+    function winningCandidate(string branch) public view returns (Candidate)
     {
         uint winningVoteCount = 0;
+        uint winningCandidate;
         Candidate[] list = candidates_info[branch];
         uint length = list.length;
         for (uint p = 0; p <length; p++) {
@@ -49,20 +44,10 @@ contract VotingBallot {
                 winningCandidate = p;
             }
         }
-        return winningCandidate;
+        return list[winningCandidate];
     }
     
-    // function getCandidates(string branch) public returns(uint []){
-    //     uint[] result;
-    //     for (uint i=0;i<candidates.length;i++){
-    //         if (keccak256(abi.encodePacked(candidates[i].branch))== keccak256(abi.encodePacked(branch))) {
-    //             result.push(candidates[i].roll_number);
-    //         }
-    //     }
-    //     return result;
-    // }
-    
-    function getCandidates(string branch) public returns(Candidate []){
+    function getCandidates(string branch) public view returns(Candidate []){
         Candidate[] result;
         Candidate[] list = candidates_info[branch];
         uint length = list.length;
