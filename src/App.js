@@ -5,12 +5,9 @@ import Web3 from "web3";
 import Voter from './Voter/Voter';
 
 const web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
-web3.eth.defaultAccount = web3.eth.accounts[0];
+// web3.eth.defaultAccount = web3.eth.getAccounts();
 
-const RemixContract = new web3.eth.Contract(
-  ABI,
-  "0xFF8D32b20DB18113c882bCda85b44faF8B6d57ED"
-);
+const RemixContract = new web3.eth.Contract(ABI,"0xcFDF423f7F7FdF97801E29A3eBd5f3B353A63d93");
 
 
 
@@ -38,11 +35,12 @@ class App extends Component {
       console.log(result);
       var voters = (
         <div>
-          {result.map((roll, index) => {
+          {result.map((candidate, index) => {
             return <Voter
-              click={() => this.voteForCandidate(roll)}
-              roll={roll}
-              key={roll} 
+              click={() => this.voteForCandidate(candidate[0])}
+              roll={candidate[0]}
+              name={candidate[2]}
+              key={candidate[0]} 
               />
           })}
         </div>
@@ -65,8 +63,14 @@ class App extends Component {
       <div className="App">
         <h1>Welcome to Election Portal. Enter the details below</h1>
         <input name="roll_number" value={this.state.roll_number} type="number" placeholder="Enter your Roll Number" onChange={this.handleChange}/>
-        <input name="branch" value={this.state.name} type="text" placeholder="Enter your branch" onChange={this.handleChange}/>
+        <select onChange={this.handleChange} placeholder="Select your branch" name="branch">
+          <option>Choose your option</option>
+          <option value="CSE">CSE</option>
+          <option value="ECE">ECE</option>
+          <option value="ME">ME</option>
+        </select>
         <button style={style} onClick={this.getCandidates}>Submit</button>
+        {this.state.votersList}
       </div>
     );
   }
