@@ -62,8 +62,8 @@ contract VotingBallot {
     //     return result;
     // }
     
-    function getCandidates(string branch) public returns(uint []){
-        uint[] result;
+    function getCandidates(string branch) public returns(Candidate []){
+        Candidate[] result;
         Candidate[] list = candidates_info[branch];
         uint length = list.length;
         for (uint p = 0; p<length; p++){
