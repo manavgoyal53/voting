@@ -7,7 +7,7 @@ import Voter from './Voter/Voter';
 
 const web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
 const RemixContract = new web3.eth.Contract(ABI,"0x18eB3232467F0665BBdc5f5F962E005da11270c3");
-
+var accounts =  web3.eth.getAccounts();
 
 
 class App extends Component {
@@ -15,8 +15,7 @@ class App extends Component {
   state = {
     branch: '',
     roll_number: 0,
-    votersList:null,
-    accounts: web3.eth.getAccounts()
+    votersList:null
   }
 
   handleChange = (evt) => {
@@ -26,9 +25,9 @@ class App extends Component {
   }
 
   voteForCandidate = (roll_number) =>{
-    console.log(this.state.accounts);
+    console.log(accounts);
     RemixContract.methods.vote(roll_number,this.state.roll_number)
-    .send({from:this.state.accounts[9]}).then((receipt)=>{
+    .send({from:accounts[9]}).then((receipt)=>{
       console.log(receipt);
       console.log(`You have successfully voted for${roll_number}`);
     }).catch((err)=>{
