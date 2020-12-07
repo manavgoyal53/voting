@@ -1,5 +1,6 @@
 pragma solidity ^0.4.0;
 pragma experimental ABIEncoderV2;
+
 contract VotingBallot {
     
     struct Candidate {
@@ -17,6 +18,7 @@ contract VotingBallot {
 
         for (uint i = 0; i < candiatesInfo.length; i++) {
             candidates_info[candiatesInfo[i].branch].push(candiatesInfo[i]);
+            vote_count[candiatesInfo[i].roll_number]=0;
         }
     }
     
