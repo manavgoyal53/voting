@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {ABI} from './ABI';
 import './App.css';
-import { MDBBtn, MDBInput,MDBRow, MDBCol, MDBContainer } from "mdbreact";
+import { MDBBtn, MDBInput,MDBRow, MDBCol, MDBContainer,toast,ToastContainer } from "mdbreact";
 import Web3 from "web3";
 import Voter from './Voter/Voter';
 
@@ -27,16 +27,26 @@ class App extends Component {
   voteForCandidate = async (roll_number) => {
     let accounts = await web3.eth.getAccounts();
     RemixContract.methods.vote(roll_number,this.state.roll_number)
-    .send({from:accounts[9]}).then((receipt)=>{
-      console.log(`You have successfully voted for ${roll_number}`);
+    .send({from:accounts[5]}).then((receipt)=>{
+      return(
+      toast.success(`You have successfully voted for ${roll_number}`, {
+        closeButton: false
+      })
+      )
     }).catch((err)=>{
-      console.log(err);
+      return(
+        toast.error(err, {
+          closeButton: false
+        })
+        )
     })
   }
 
   getResult = () => {
     RemixContract.methods.winningCandidate(this.state.branch).call().then((result)=>{
       console.log(result);
+    }).catch((err)=>{
+      console.log(err)
     })
   }
 
@@ -63,13 +73,6 @@ class App extends Component {
   }
 
   render() {
-    const style = {
-      backgroundColor: 'white',
-      font: 'inherit',
-      border: '1px solid blue',
-      padding: '8px',
-      cursor: 'pointer'
-    };
     return (
       <div className="App">
         <MDBContainer>
@@ -99,6 +102,7 @@ class App extends Component {
           <MDBBtn color="primary" onClick={this.getResult}>View Result</MDBBtn>
           </MDBCol>
         </MDBRow>
+        <ToastContainer hideProgressBar={true} newestOnTop={true} autoClose={5000}/>
         {this.state.votersList}
         </MDBContainer>
       </div>
