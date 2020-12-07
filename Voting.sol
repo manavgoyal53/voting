@@ -8,48 +8,55 @@ contract VotingBallot {
         string branch;
         string name;
     }
+    
+    struct Voter{
+        uint roll_number;
+        bool voted;
+        string branch;
+    }
+    
+    address public senate_head;
 
-    mapping(address => bool) public voters_addresses;
-    mapping(uint => bool) public voters_roll_nums;
-    mapping(uint=>uint) vote_count;
-    mapping(string=>Candidate[]) candidates_info;
+    mapping(address => Voter) private voters;    
+    mapping(uint=>uint) private vote_count;
+    mapping(string=>Candidate[]) private candidates_info;
 
-    constructor(Candidate[] memory candiatesInfo) {
-
+    constructor(Candidate[] memory candiatesInfo)  {
+        
+        senate_head = msg.sender;
         for (uint i = 0; i < candiatesInfo.length; i++) {
             candidates_info[candiatesInfo[i].branch].push(candiatesInfo[i]);
             vote_count[candiatesInfo[i].roll_number]=0;
         }
     }
     
-    function vote(uint candidate, uint voter_roll) public {
+    function vote(uint candidate) private {
         
-        require(!voters_roll_nums[voter_roll],"You have already voted");
-        require(!voters_addresses[msg.sender], "This address has already been used for voting.");
-
-        
-        voters_addresses[msg.sender] = true;
-        voters_roll_nums[voter_roll] = true;
-
+        require(!voters[msg.sender].voted,"You have already voted");
         vote_count[candidate] += 1;
     }
+    
+    function add_voter(string branch, uint roll,address voters_address) private {
+        require(msg.sender==senate_head,"Access denied. Only head can add a voter");
+        voters[voters_address] = Voter({roll_number:roll,branch:branch,voted:false});
+    }
 
-    function winningCandidate(string branch) public view returns (Candidate)
+    function winningCandidate(string branch) private view returns (Candidate)
     {
         uint winningVoteCount = 0;
-        uint winningCandidate;
-        Candidate[] list = candidates_info[branch];
+        uint winningCandidateindx;
+        Candidate[] storage list = candidates_info[branch];
         uint length = list.length;
         for (uint p = 0; p <length; p++) {
             if (vote_count[list[p].roll_number] > winningVoteCount) {
                 winningVoteCount = vote_count[list[p].roll_number];
-                winningCandidate = p;
+                winningCandidateindx = p;
             }
         }
-        return list[winningCandidate];
+        return list[winningCandidateindx];
     }
     
-    function getCandidates(string branch) public view returns(Candidate []){
+    function getCandidates(string branch) private view returns(Candidate []){
         Candidate[] result;
         Candidate[] list = candidates_info[branch];
         uint length = list.length;
