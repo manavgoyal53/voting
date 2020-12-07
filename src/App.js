@@ -6,7 +6,7 @@ import Web3 from "web3";
 import Voter from './Voter/Voter';
 
 const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
-const RemixContract = new web3.eth.Contract(ABI,"0x18eB3232467F0665BBdc5f5F962E005da11270c3");
+const RemixContract = new web3.eth.Contract(ABI,"0xCD8626895f8115965C92eDb12B6d38618e6eC256");
 
 
 
@@ -27,7 +27,7 @@ class App extends Component {
   voteForCandidate = async (roll_number) => {
     let accounts = await web3.eth.getAccounts();
     RemixContract.methods.vote(roll_number,this.state.roll_number)
-    .send({from:accounts[5]}).then((receipt)=>{
+    .send({from:accounts[3]}).then((receipt)=>{
       return(
       toast.success(`You have successfully voted for ${roll_number}`, {
         closeButton: false
@@ -45,13 +45,21 @@ class App extends Component {
   getResult = () => {
     RemixContract.methods.winningCandidate(this.state.branch).call().then((result)=>{
       console.log(result);
+      var segment = (
+        <div>
+          <p>{result[0]}</p>
+          <p>{result[2]}</p>
+        </div>
+      );
+      this.setState({
+        votersList:segment
+      })
     }).catch((err)=>{
       console.log(err)
     })
   }
 
   getCandidates = async (evt) =>{
-    // const accounts = await web3.eth.getAccounts();
     RemixContract.methods.getCandidates(this.state.branch).call().then((result)=>{
       console.log(result);
       var voters = (
