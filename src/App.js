@@ -5,9 +5,9 @@ import { MDBBtn, MDBInput,MDBRow, MDBCol, MDBContainer } from "mdbreact";
 import Web3 from "web3";
 import Voter from './Voter/Voter';
 
-const web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
+const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
 const RemixContract = new web3.eth.Contract(ABI,"0x18eB3232467F0665BBdc5f5F962E005da11270c3");
-var accounts =  web3.eth.getAccounts();
+
 
 
 class App extends Component {
@@ -24,12 +24,11 @@ class App extends Component {
     })
   }
 
-  voteForCandidate = (roll_number) =>{
-    console.log(accounts);
+  voteForCandidate = async (roll_number) => {
+    let accounts = await web3.eth.getAccounts();
     RemixContract.methods.vote(roll_number,this.state.roll_number)
     .send({from:accounts[9]}).then((receipt)=>{
-      console.log(receipt);
-      console.log(`You have successfully voted for${roll_number}`);
+      console.log(`You have successfully voted for ${roll_number}`);
     }).catch((err)=>{
       console.log(err);
     })
