@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import {ABI} from './ABI';
 import './App.css';
+import { MDBBtn, MDBInput,MDBRow, MDBCol, MDBContainer } from "mdbreact";
 import Web3 from "web3";
 import Voter from './Voter/Voter';
 
 const web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
-// web3.eth.defaultAccount = web3.eth.getAccounts();
-
-const RemixContract = new web3.eth.Contract(ABI,"0xcFDF423f7F7FdF97801E29A3eBd5f3B353A63d93");
+const RemixContract = new web3.eth.Contract(ABI,"0x18eB3232467F0665BBdc5f5F962E005da11270c3");
 
 
 
@@ -16,7 +15,8 @@ class App extends Component {
   state = {
     branch: '',
     roll_number: 0,
-    votersList:null
+    votersList:null,
+    accounts: web3.eth.getAccounts()
   }
 
   handleChange = (evt) => {
@@ -25,8 +25,21 @@ class App extends Component {
     })
   }
 
-  voteForCandidate = (evt) =>{
+  voteForCandidate = (roll_number) =>{
+    console.log(this.state.accounts);
+    RemixContract.methods.vote(roll_number,this.state.roll_number)
+    .send({from:this.state.accounts[9]}).then((receipt)=>{
+      console.log(receipt);
+      console.log(`You have successfully voted for${roll_number}`);
+    }).catch((err)=>{
+      console.log(err);
+    })
+  }
 
+  getResult = () => {
+    RemixContract.methods.winningCandidate(this.state.branch).call().then((result)=>{
+      console.log(result);
+    })
   }
 
   getCandidates = async (evt) =>{
@@ -61,16 +74,35 @@ class App extends Component {
     };
     return (
       <div className="App">
+        <MDBContainer>
+        <br></br>
         <h1>Welcome to Election Portal. Enter the details below</h1>
-        <input name="roll_number" value={this.state.roll_number} type="number" placeholder="Enter your Roll Number" onChange={this.handleChange}/>
-        <select onChange={this.handleChange} placeholder="Select your branch" name="branch">
-          <option>Choose your option</option>
-          <option value="CSE">CSE</option>
-          <option value="ECE">ECE</option>
-          <option value="ME">ME</option>
-        </select>
-        <button style={style} onClick={this.getCandidates}>Submit</button>
+        <br></br>
+        <MDBRow>
+          <MDBCol className="mb-5">
+                <MDBInput name="roll_number" required value={this.state.roll_number} type="number" label="Enter your Roll Number" onChange={this.handleChange}/>
+          </MDBCol>
+        </MDBRow>
+        <MDBRow>
+          <MDBCol className="mb-5">
+            <select onChange={this.handleChange} name="branch" required>
+              <option>Choose your branch</option>
+              <option value="CSE">CSE</option>
+              <option value="ECE">ECE</option>
+              <option value="ME">ME</option>
+            </select>
+          </MDBCol>
+        </MDBRow>
+        <MDBRow>
+          <MDBCol>
+          <MDBBtn color="primary" onClick={this.getCandidates}>Vote</MDBBtn>
+          </MDBCol>
+          <MDBCol>
+          <MDBBtn color="primary" onClick={this.getResult}>View Result</MDBBtn>
+          </MDBCol>
+        </MDBRow>
         {this.state.votersList}
+        </MDBContainer>
       </div>
     );
   }
