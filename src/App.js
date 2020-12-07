@@ -28,6 +28,11 @@ class App extends Component {
     let accounts = await web3.eth.getAccounts();
     RemixContract.methods.vote(roll_number,this.state.roll_number)
     .send({from:accounts[3]}).then((receipt)=>{
+      this.setState({
+        branch: '',
+        roll_number: 0,
+        votersList:null
+      })
       return(
       toast.success(`You have successfully voted for ${roll_number}`, {
         closeButton: false
