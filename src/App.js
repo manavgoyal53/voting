@@ -26,7 +26,7 @@ import Web3 from "web3";
 import Voter from './Voter/Voter';
 
 const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
-const RemixContract = new web3.eth.Contract(ABI, "0xCD8626895f8115965C92eDb12B6d38618e6eC256");
+const RemixContract = new web3.eth.Contract(ABI, "0xbb43742982Aa95404907E9485f609555e793AcDF");
 
 
 
@@ -77,7 +77,7 @@ class App extends Component {
   // }
 
   getResult = () => {
-    RemixContract.methods.winningCandidate(this.state.branch).call().then((result) => {
+    RemixContract.methods.winningCandidate(this.state.branch).call({from:"0xe4f69f58539f3e6E6f6E5e24f811087d0045Ca21"}).then((result) => {
       console.log(result);
       var segment = (
         <div>
@@ -112,6 +112,11 @@ class App extends Component {
         votersList: voters
       })
     })
+  }
+
+  // function for adding a voter through admin
+  add_voter = () =>{
+
   }
 
   handleClickOpen = () => {
@@ -202,9 +207,9 @@ class App extends Component {
                           this.setState({ branch: event.target.value, errorMsgBr: '' });
                         }}
                       >
-                        <MenuItem value={"e"}>ECE</MenuItem>
-                        <MenuItem value={"m"}>ME</MenuItem>
-                        <MenuItem value={"c"}>CSE</MenuItem>
+                        <MenuItem value={"ECE"}>ECE</MenuItem>
+                        <MenuItem value={"ME"}>ME</MenuItem>
+                        <MenuItem value={"CSE"}>CSE</MenuItem>
                       </Select>
                       <FormHelperText>{this.state.errorMsgBr}</FormHelperText>
                     </FormControl>
