@@ -28,8 +28,6 @@ import Voter from './Voter/Voter';
 const web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
 const RemixContract = new web3.eth.Contract(ABI, "0xbb43742982Aa95404907E9485f609555e793AcDF");
 
-
-
 class App extends Component {
 
   constructor(props) {
@@ -77,7 +75,7 @@ class App extends Component {
   // }
 
   getResult = () => {
-    RemixContract.methods.winningCandidate(this.state.branch).call({from:"0xe4f69f58539f3e6E6f6E5e24f811087d0045Ca21"}).then((result) => {
+    RemixContract.methods.winningCandidate(this.state.branch).call({ from: "0xe4f69f58539f3e6E6f6E5e24f811087d0045Ca21" }).then((result) => {
       console.log(result);
       var segment = (
         <div>
@@ -94,19 +92,28 @@ class App extends Component {
   }
 
   getCandidates = async (evt) => {
+    // this.setState({ validated: true });
+    // if (this.state.roll_number < 0) {
+    //   this.setState({ errorMsgRn: "Invalid Roll No.", validated: false });
+    // }
+    // if (this.state.branch == '') {
+    //   this.setState({ errorMsgBr: "Please select a Branch", validated: false });
+    // }
     RemixContract.methods.getCandidates(this.state.branch).call().then((result) => {
       console.log(result);
       var voters = (
-        <div>
-          {result.map((candidate, index) => {
-            return <Voter
-              click={() => this.voteForCandidate(candidate[0])}
-              roll={candidate[0]}
-              name={candidate[2]}
-              key={candidate[0]}
-            />
-          })}
-        </div>
+        <Container className={this.props.classes.cardGrid} maxWidth="md">
+          <Grid container spacing={4}>
+            {result.map((candidate, index) => {
+              return <Voter
+                click={() => this.voteForCandidate(candidate[0])}
+                roll={candidate[0]}
+                name={candidate[2]}
+                key={candidate[0]}
+              />
+            })}
+          </Grid>
+        </Container>
       );
       this.setState({
         votersList: voters
@@ -115,7 +122,7 @@ class App extends Component {
   }
 
   // function for adding a voter through admin
-  add_voter = () =>{
+  add_voter = () => {
 
   }
 
@@ -216,22 +223,13 @@ class App extends Component {
                   </Grid>
                 </Grid>
                 <Grid container spacing={1} justify="center">
-                  <Button variant="contained" color="primary" onClick={() => {
-                    this.setState({ validated: true });
-                    if (this.state.roll_number < 0) {
-                      this.setState({ errorMsgRn: "Invalid Roll No.", validated: false });
-                    }
-                    if (this.state.branch == '') {
-                      this.setState({ errorMsgBr: "Please select a Branch", validated: false });
-                    }
-                  }}>
+                  <Button variant="contained" color="primary" onClick={this.getCandidates}>
                     Confirm
                   </Button>
                 </Grid>
               </div>
             </Container>
           </div>
-          {this.state.roll_number > 0 && this.state.branch != '' && this.state.validated && <VoterList></VoterList>}
         </main>
       </React.Fragment>
     );
